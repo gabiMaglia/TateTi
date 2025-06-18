@@ -21,9 +21,9 @@ p {
 }
 body {
   background: radial-gradient(circle at top, rgba(241, 210, 70, 0.98), rgba(250, 176, 103, 0.87)), url('bg-pattern-dark.png');
-  background-repeat: repeat;
+  background-repeat:repeat;
   background-size: 100% 100%, 30% 30%, 100% 100%;
-  min-height: 94dvh;
+  height:98svh ;
 }
 
 main {
@@ -31,7 +31,6 @@ main {
   grid-template-columns: repeat(3, 1fr);
   grid-template-areas: "header game log";
   column-gap: 3rem;
-  margin-inline: 3rem;
   align-items: start;
 }
 
@@ -54,7 +53,6 @@ header img {
 h1 {
   font-family: 'Caprasimo', cursive;
   font-size: 3rem;
-  margin: 0 auto 3rem auto;
   color: var(--ttt-x);
 }
 
