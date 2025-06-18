@@ -6,9 +6,9 @@ import GameOver from "./components/GameOver";
 import { WINNING_COMBINATIONS } from "./assets/winning-combinations";
 
 const PLAYERS = {
-  X: 'Player 1',
-  O: 'Player 2'
-}
+  X: "Player 1",
+  O: "Player 2",
+};
 
 const INITIAL_GAME_BOARD = [
   [null, null, null],
@@ -18,34 +18,28 @@ const INITIAL_GAME_BOARD = [
 
 const deriveActivePlayer = (gameTurns) => {
   let currentPlayer = "X";
-
   if (gameTurns.length > 0 && gameTurns[0].player === "X") {
     currentPlayer = "O";
   }
   return currentPlayer;
-}
+};
 
 const deriveWinner = (gameBoard, players) => {
-  let winner = null;
-
-  for (const combinations of WINNING_COMBINATIONS) {
-    const firstSquareSymbol =
-      gameBoard[combinations[0].row][combinations[0].column];
-    const secondSquareSymbol =
-      gameBoard[combinations[1].row][combinations[1].column];
-    const thirdSquareSymbol =
-      gameBoard[combinations[2].row][combinations[2].column];
-
+  for (const combination of WINNING_COMBINATIONS) {
+    const [a, b, c] = combination;
+    const symbol = gameBoard[a.row][a.column];
     if (
-      firstSquareSymbol &&
-      firstSquareSymbol === secondSquareSymbol &&
-      firstSquareSymbol === thirdSquareSymbol
+      symbol &&
+      symbol === gameBoard[b.row][b.column] &&
+      symbol === gameBoard[c.row][c.column]
     ) {
-      winner = players[firstSquareSymbol];
+      return {
+        winner: players[symbol],
+        winningSquares: combination,
+      };
     }
   }
-
-  return winner;
+  return { winner: null, winningSquares: [] };
 };
 
 const deriveBoard = (gameTurns) => {
@@ -57,16 +51,15 @@ const deriveBoard = (gameTurns) => {
 
     gameBoard[row][col] = player;
   }
-  return gameBoard
-}
+  return gameBoard;
+};
 
 function App() {
   const [players, setPlayers] = useState(PLAYERS);
-
   const [gameTurns, setGameTurns] = useState([]);
 
-  const gameBoard = deriveBoard(gameTurns)
-  const winner = deriveWinner(gameBoard, players);
+  const gameBoard = deriveBoard(gameTurns);
+  const { winner, winningSquares } = deriveWinner(gameBoard, players);
   const hasDraw = gameTurns.length === 9 && !winner;
   const activePlayer = deriveActivePlayer(gameTurns);
 
@@ -75,7 +68,7 @@ function App() {
       const currentPlayer = deriveActivePlayer(prevTurns);
 
       const updatedTurns = [
-        { square: { row: rowIndex, col: colIndex }, player: currentPlayer },
+        { square: { row: rowIndex, col: colIndex }, player: currentPlayer, playerName: players[currentPlayer] },
         ...prevTurns,
       ];
 
@@ -98,17 +91,22 @@ function App() {
 
   return (
     <main>
+      <header>
+        <img src="game-logo.png" alt="logo" />
+        <h1>Ta-Te-Ti</h1>
+      </header>
+
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
             onChangeName={handleChangePlayersName}
-            name={PLAYERS.X}
+            name={players.X}
             symbol="X"
             isActive={activePlayer === "X"}
           />
           <Player
             onChangeName={handleChangePlayersName}
-            name={PLAYERS.O}
+            name={players.O}
             symbol="O"
             isActive={activePlayer === "O"}
           />
@@ -116,8 +114,9 @@ function App() {
         {(winner || hasDraw) && (
           <GameOver handleRematch={handleRematch} winner={winner} />
         )}
-        <GameBoard onSelectSquare={hanldeSelectSqare} board={gameBoard} />
+        <GameBoard onSelectSquare={hanldeSelectSqare} board={gameBoard}  winningSquares={winningSquares}/>
       </div>
+      
       <Log log={gameTurns} />
     </main>
   );

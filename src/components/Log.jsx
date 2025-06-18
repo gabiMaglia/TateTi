@@ -3,8 +3,8 @@ const Log = ({log}) => {
     <ol id="log"> 
         {log.map((moveLog, logIndex) => 
             <li key={logIndex}>
-                <p>Jugador: {moveLog.player}</p>
-                <p>Fila - {moveLog.square.row} Columna - {moveLog.square.col} </p>
+                <p>{moveLog.playerName}</p>
+                <p>Fila - {moveLog.square.row + 1} Columna - {moveLog.square.col + 1}  </p>
             </li>    
         ) }
     </ol>
